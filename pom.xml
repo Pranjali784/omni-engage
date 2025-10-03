@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Standard Maven setup lines (inside <project></project>-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation = "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- These are the "coordinates" for the PARENT project itself. -->
+    <groupId>com.project</groupId>
+    <artifactId>omni-engage-platform</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <!--MOST IMP LINE becoz  It tells Maven, "This project is not a normal application that should be packaged into a .jar or .war file.This is a Parent POM-->
+    <packaging>pom</packaging>
+
+    <name>Omni Engage Platform - Parent</name>
+
+    <!--This section lists all the sub-projects (modules)-->
+    <modules>
+        <module>agent-service</module>
+        <module>ingestion-service</module>
+    </modules>
+</project>

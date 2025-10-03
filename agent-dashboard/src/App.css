@@ -1,0 +1,179 @@
+/* Make root elements always full height */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* prevent double scroll */
+}
+
+/* Full screen layout */
+.app-container {
+  font-family: Arial, sans-serif;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  text-align: center;
+  background: #1f2937;
+  color: white;
+  padding: 15px;
+  margin: 0;              /* remove margin gap */
+  border-radius: 0;       /* remove round edges to stick to top */
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  background: #f9f9f9;
+  padding: 8px;
+}
+
+.tabs button {
+  padding: 8px 15px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tabs .active {
+  background: #2563eb;
+  color: white;
+}
+
+.dashboard {
+  display: flex;
+  flex: 1;               /* take full remaining height */
+  overflow: hidden;       /* stop page scroll */
+}
+
+.sidebar {
+  width: 30%;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.filters {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.filters select,
+.filters input {
+  padding: 6px;
+  flex: 1;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.sidebar li {
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sidebar li.active {
+  background: #e5f0ff;
+}
+
+.sidebar li.closed {
+  color: gray;
+  background: #f3f4f6;
+}
+
+.chat-window .messages {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 10px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.reply-box {
+  display: flex;
+  gap: 10px;
+}
+
+.reply-box input {
+  flex: 1;
+  padding: 8px;
+}
+
+.reply-box button {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.reply-box .close-btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.reopen-btn {
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+
+.agents-dashboard {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.agents-dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.agents-dashboard th,
+.agents-dashboard td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.badge.available {
+  background: green;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.badge.busy {
+  background: red;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
