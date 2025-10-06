@@ -1,8 +1,11 @@
-// App.js (Corrected)
-
+// App.js (Final - Docker Ready)
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+
+// ✅ Base URLs (Dynamic for Local + Docker)
+const AGENT_API_BASE = process.env.REACT_APP_AGENT_API_BASE || "http://localhost:8081";
+const INGESTION_API_BASE = process.env.REACT_APP_INGESTION_API_BASE || "http://localhost:8080";
 
 function App() {
   const [activeTab, setActiveTab] = useState("conversations");
@@ -13,8 +16,7 @@ function App() {
   const [agents, setAgents] = useState([]);
   const [loadingAgents, setLoadingAgents] = useState(false);
 
-  // Simplified: Always use the /filter endpoint.
-  // The backend will handle empty filters by returning all conversations.
+  // Fetch Conversations
   const fetchConversations = async () => {
     try {
       const params = new URLSearchParams();
@@ -22,30 +24,29 @@ function App() {
       if (filters.agentName) params.append("agentName", filters.agentName);
       if (filters.status) params.append("status", filters.status);
 
-      const url = `http://localhost:8081/api/conversations/filter?${params.toString()}`;
-
+      const url = `${AGENT_API_BASE}/api/conversations/filter?${params.toString()}`;
       const response = await axios.get(url, {
         auth: { username: "user", password: "password" },
       });
 
-      // Sort conversations by creation date on the frontend for consistency
-      const sortedConversations = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const sortedConversations = response.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       setConversations(sortedConversations);
-
     } catch (err) {
       console.error("Failed to fetch conversations", err);
     }
   };
 
-  // Fetch agents
+  // Fetch Agents
   const fetchAgents = async () => {
     setLoadingAgents(true);
     try {
-      const response = await axios.get("http://localhost:8081/api/agents", {
+      const response = await axios.get(`${AGENT_API_BASE}/api/agents`, {
         auth: { username: "user", password: "password" },
       });
       setAgents(response.data);
-    } catch (err) { // **FIX**: Added missing curly braces here
+    } catch (err) {
       console.error("Failed to fetch agents", err);
     } finally {
       setLoadingAgents(false);
@@ -65,32 +66,37 @@ function App() {
     }
   }, [activeTab, filters]);
 
-  // Handle reply send
+  // Send Reply
   const sendReply = async () => {
     if (!selectedConversation || !reply.trim()) return;
     try {
       await axios.post(
-        `http://localhost:8081/api/conversations/${selectedConversation.id}/messages`,
+        `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/messages`,
         { content: reply, sender: "Agent" },
         { auth: { username: "user", password: "password" } }
       );
       setReply("");
-      // Also update selected conversation to show message immediately
-      const newMessage = { sender: "Agent", content: reply, timestamp: new Date().toISOString() };
-      setSelectedConversation(prev => ({...prev, messages: [...prev.messages, newMessage]}));
-      // Re-fetch in the background to keep data in sync
+      const newMessage = {
+        sender: "Agent",
+        content: reply,
+        timestamp: new Date().toISOString(),
+      };
+      setSelectedConversation((prev) => ({
+        ...prev,
+        messages: [...prev.messages, newMessage],
+      }));
       fetchConversations();
     } catch (err) {
       console.error("Failed to send reply", err);
     }
   };
 
-  // Close conversation
+  // Close Conversation
   const closeConversation = async () => {
     if (!selectedConversation) return;
     try {
       await axios.post(
-        `http://localhost:8081/api/conversations/${selectedConversation.id}/close`,
+        `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/close`,
         {},
         { auth: { username: "user", password: "password" } }
       );
@@ -101,12 +107,12 @@ function App() {
     }
   };
 
-  // Reopen conversation
+  // Reopen Conversation
   const reopenConversation = async () => {
     if (!selectedConversation) return;
     try {
       await axios.post(
-        `http://localhost:8081/api/conversations/${selectedConversation.id}/reopen`,
+        `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/reopen`,
         {},
         { auth: { username: "user", password: "password" } }
       );
@@ -196,7 +202,8 @@ function App() {
             {selectedConversation ? (
               <>
                 <h3>
-                  Chat with {selectedConversation.customerName} ({selectedConversation.channel})
+                  Chat with {selectedConversation.customerName} (
+                  {selectedConversation.channel})
                 </h3>
                 <p>
                   <strong>Agent:</strong> {selectedConversation.agent?.name}

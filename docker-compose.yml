@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: omni-mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-omni_engage}
+      MYSQL_USER: ${MYSQL_USER:-omni}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-omnipass}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+
+  agent-service:
+    build: ./agent-service
+    container_name: agent-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-omni_engage}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-omni}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-omnipass}
+      SPRING_PROFILES_ACTIVE: prod
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info
+      JAVA_OPTS: ${JAVA_OPTS:-}
+    ports:
+      - "8081:8081"
+
+  ingestion-service:
+    build: ./ingestion-service
+    container_name: ingestion-service
+    depends_on:
+      agent-service:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info
+      JAVA_OPTS: ${JAVA_OPTS:-}
+      # If your property name differs, adjust this JSON path
+      SPRING_APPLICATION_JSON: >
+        {"agent":{"service":{"base-url":"http://agent-service:8081"}}}
+    ports:
+      - "8080:8080"
+
+  agent-dashboard:
+    build:
+      context: ./agent-dashboard
+      args:
+        REACT_APP_AGENT_API_BASE: http://localhost:8081
+        REACT_APP_INGESTION_API_BASE: http://localhost:8080
+    container_name: agent-dashboard
+    depends_on:
+      agent-service:
+        condition: service_started
+      ingestion-service:
+        condition: service_started
+    ports:
+      - "3000:80"
+
+volumes:
+  mysql_data:

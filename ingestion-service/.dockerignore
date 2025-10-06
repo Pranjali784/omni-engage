@@ -1,0 +1,16 @@
+# Common files to ignore
+**/target
+**/node_modules
+**/.idea
+**/.vscode
+**/.git
+**/.gitignore
+**/.DS_Store
+**/Thumbs.db
+
+# Java build test files
+**/src/test
+
+# Node/React build folders
+**/build
+npm-debug.log*
