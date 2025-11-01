@@ -23,7 +23,7 @@ An Omni-channel customer engagement system built with a modern **microservices a
 - [⚙️ Tech Stack](#️-tech-stack)
 - [🧠 Features](#-features)
 - [☁️ Future Enhancements](#-future-enhancements)
-- [🧑‍💼 Author](#-author)
+- [👩‍💼 Author](#-author)
 
 ---
 
@@ -170,5 +170,6 @@ Password: omni123
 ---
 
 > 🐳 *This project demonstrates modern microservice development and deployment practices using Spring Boot, React, MySQL, and Docker.*
+
 
 
