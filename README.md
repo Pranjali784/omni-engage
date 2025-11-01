@@ -155,7 +155,7 @@ Password: omni123
 
 ---
 
-## 🧑‍💼 Author
+## 👩‍💼 Author
 
 **Pranjali Srivastava**  
 *Java Developer | Full-Stack Enthusiast*  
@@ -170,4 +170,5 @@ Password: omni123
 ---
 
 > 🐳 *This project demonstrates modern microservice development and deployment practices using Spring Boot, React, MySQL, and Docker.*
+
 
