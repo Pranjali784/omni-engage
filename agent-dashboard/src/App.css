@@ -1,37 +1,21 @@
-/* ===========================================
-   GLOBAL RESET
-   =========================================== */
+/* GLOBAL RESET */
 html, body, #root {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* prevent global scroll */
+  overflow: hidden; 
   font-family: Arial, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-/* Ensure horizontal scroll can NEVER appear */
-html, body {
-  overflow-x: hidden !important;
-}
-
-/* ===========================================
-   APP CONTAINER
-   =========================================== */
+/* FULL APP LAYOUT */
 .app-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
 }
 
-/* ===========================================
-   HEADER
-   =========================================== */
+/* HEADER */
 h1 {
   text-align: center;
   background: #1f2937;
@@ -40,9 +24,7 @@ h1 {
   margin: 0;
 }
 
-/* ===========================================
-   TABS
-   =========================================== */
+/* TABS */
 .tabs {
   display: flex;
   justify-content: center;
@@ -64,30 +46,29 @@ h1 {
   color: white;
 }
 
-/* ===========================================
-   MAIN DASHBOARD LAYOUT
-   =========================================== */
+/* MAIN LAYOUT */
 .dashboard {
   flex: 1;
   display: flex;
-  overflow: hidden; /* MASTER FIX: stops full-page scroll bars */
+  overflow: hidden; /* important */
 }
 
-/* ===========================================
-   SIDEBAR (LEFT)
-   =========================================== */
+/* SIDEBAR — EXACTLY 50% */
 .sidebar {
-  width: 28%;
-  min-width: 260px;
+  width: 50%;
+  max-width: 50%;
+  min-width: 50%;
   border-right: 1px solid #ccc;
   padding: 10px;
+
   display: flex;
   flex-direction: column;
-  overflow-y: auto;  
-  overflow-x: hidden !important;
+
+  overflow-y: auto;
+  overflow-x: hidden !important; /* prevents sideways scroll */
 }
 
-/* FILTER CONTROLS */
+/* FILTER AREA */
 .filters {
   display: flex;
   gap: 8px;
@@ -98,14 +79,14 @@ h1 {
 .filters input {
   padding: 6px;
   flex: 1;
-  min-width: 0;
 }
 
-/* LIST OF CONVERSATIONS */
+/* CONVERSATION LIST */
 .sidebar ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  flex: 1;
 }
 
 .sidebar li {
@@ -115,7 +96,7 @@ h1 {
   border-radius: 6px;
   cursor: pointer;
   background: white;
-  transition: background 0.15s ease;
+  transition: 0.15s ease;
 }
 
 .sidebar li:hover {
@@ -131,19 +112,19 @@ h1 {
   color: #6b7280;
 }
 
-/* ===========================================
-   CHAT WINDOW (RIGHT)
-   =========================================== */
+/* CHAT WINDOW — EXACTLY 50% */
 .chat-window {
-  flex: 1;
+  width: 50%;
+  max-width: 50%;
+  min-width: 50%;
+
   display: flex;
   flex-direction: column;
   padding: 14px;
-  overflow: hidden;     /* absolutely no scroll */
-  min-width: 0 !important; /* CRITICAL FOR FLEX layout */
+  overflow: hidden; /* prevents outside scroll */
 }
 
-/* MESSAGES PANEL */
+/* MESSAGE LIST */
 .messages {
   flex: 1;
   padding: 12px;
@@ -151,42 +132,36 @@ h1 {
   border-radius: 6px;
   overflow-y: auto;
   overflow-x: hidden;
-  background: white;
   margin-bottom: 12px;
+  background: white;
 }
 
+/* INDIVIDUAL MESSAGE */
 .message {
   margin-bottom: 14px;
   line-height: 1.4;
 }
 
-/* ===========================================
-   REPLY BOX
-   =========================================== */
+/* REPLY BOX */
 .reply-box {
   display: flex;
   gap: 10px;
-  align-items: center;
-  flex-wrap: nowrap;
   width: 100%;
-  overflow: hidden;  /* ❤️ REAL fix for your scroll bar */
 }
 
 .reply-box input {
   flex: 1;
   padding: 8px;
-  min-width: 0 !important; /* prevents overflow forcing */
+  min-width: 0;
 }
 
 .reply-box button {
   padding: 8px 12px;
-  white-space: nowrap;
-  border-radius: 4px;
   border: none;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-/* BUTTON COLORS */
 .close-btn {
   background: red;
   color: white;
@@ -197,14 +172,11 @@ h1 {
   color: white;
 }
 
-/* ===========================================
-   AGENTS DASHBOARD
-   =========================================== */
+/* AGENTS DASHBOARD */
 .agents-dashboard {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  overflow-x: hidden !important;
 }
 
 table {
@@ -217,7 +189,6 @@ th, td {
   padding: 10px;
 }
 
-/* BADGES */
 .badge.available {
   background: #059669;
   color: white;
@@ -230,4 +201,13 @@ th, td {
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
+}
+
+/* Always prevent horizontal scrollbar forever */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden !important;
 }
