@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
-// Base URLs for Deployment
-const AGENT_API_BASE = process.env.REACT_APP_AGENT_API_BASE || "http://localhost:8081";
+// 🌐 Backend API URLs (correct for Local + Render + Vercel)
+const AGENT_API_BASE =
+  process.env.REACT_APP_AGENT_API_BASE || "https://omni-agent2.onrender.com";
+
+const INGESTION_API_BASE =
+  process.env.REACT_APP_INGESTION_API_BASE || "https://omni-ingestion.onrender.com";
 
 function App() {
   const [activeTab, setActiveTab] = useState("conversations");
@@ -14,7 +18,9 @@ function App() {
   const [agents, setAgents] = useState([]);
   const [loadingAgents, setLoadingAgents] = useState(false);
 
+  // --------------------------------------------------------
   // Fetch Conversations
+  // --------------------------------------------------------
   const fetchConversations = async () => {
     try {
       const params = new URLSearchParams();
@@ -29,26 +35,31 @@ function App() {
       const sortedConversations = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
+
       setConversations(sortedConversations);
     } catch (err) {
-      console.error("Failed to fetch conversations", err);
+      console.error("❌ Failed to fetch conversations:", err);
     }
   };
 
+  // --------------------------------------------------------
   // Fetch Agents
+  // --------------------------------------------------------
   const fetchAgents = async () => {
     setLoadingAgents(true);
     try {
       const response = await axios.get(`${AGENT_API_BASE}/api/agents`);
       setAgents(response.data);
     } catch (err) {
-      console.error("Failed to fetch agents", err);
+      console.error("❌ Failed to fetch agents:", err);
     } finally {
       setLoadingAgents(false);
     }
   };
 
-  // Auto Refresh
+  // --------------------------------------------------------
+  // Auto-refresh every 10 seconds
+  // --------------------------------------------------------
   useEffect(() => {
     if (activeTab === "conversations") {
       fetchConversations();
@@ -61,7 +72,9 @@ function App() {
     }
   }, [activeTab, filters]);
 
+  // --------------------------------------------------------
   // Send Reply
+  // --------------------------------------------------------
   const sendReply = async () => {
     if (!selectedConversation || !reply.trim()) return;
 
@@ -70,8 +83,6 @@ function App() {
         `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/messages`,
         { content: reply, sender: "Agent" }
       );
-
-      setReply("");
 
       const newMessage = {
         sender: "Agent",
@@ -84,42 +95,61 @@ function App() {
         messages: [...prev.messages, newMessage],
       }));
 
+      setReply("");
       fetchConversations();
     } catch (err) {
-      console.error("Failed to send reply", err);
+      console.error("❌ Failed to send reply:", err);
     }
   };
 
+  // --------------------------------------------------------
   // Close Conversation
+  // --------------------------------------------------------
   const closeConversation = async () => {
     if (!selectedConversation) return;
 
     try {
       await axios.post(`${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/close`);
-      setSelectedConversation({ ...selectedConversation, status: "CLOSED" });
+
+      setSelectedConversation({
+        ...selectedConversation,
+        status: "CLOSED",
+      });
+
       fetchConversations();
     } catch (err) {
-      console.error("Failed to close conversation", err);
+      console.error("❌ Failed to close conversation:", err);
     }
   };
 
+  // --------------------------------------------------------
   // Reopen Conversation
+  // --------------------------------------------------------
   const reopenConversation = async () => {
     if (!selectedConversation) return;
 
     try {
       await axios.post(`${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/reopen`);
-      setSelectedConversation({ ...selectedConversation, status: "OPEN" });
+
+      setSelectedConversation({
+        ...selectedConversation,
+        status: "OPEN",
+      });
+
       fetchConversations();
     } catch (err) {
-      console.error("Failed to reopen conversation", err);
+      console.error("❌ Failed to reopen conversation:", err);
     }
   };
 
+  // --------------------------------------------------------
+  // UI Rendering
+  // --------------------------------------------------------
   return (
     <div className="app-container">
       <h1>Omni-Engage Dashboard</h1>
 
+      {/* Tabs */}
       <div className="tabs">
         <button
           className={activeTab === "conversations" ? "active" : ""}
@@ -127,6 +157,7 @@ function App() {
         >
           Conversations
         </button>
+
         <button
           className={activeTab === "agents" ? "active" : ""}
           onClick={() => setActiveTab("agents")}
@@ -135,7 +166,7 @@ function App() {
         </button>
       </div>
 
-      {/* Conversations Dashboard */}
+      {/* Conversations Screen */}
       {activeTab === "conversations" && (
         <div className="dashboard">
           <div className="sidebar">
@@ -172,30 +203,34 @@ function App() {
             </div>
 
             <h2>Conversations</h2>
+
             <ul>
               {conversations.map((c) => (
                 <li
                   key={c.id}
                   onClick={() => setSelectedConversation(c)}
-                  className={`${c.status === "CLOSED" ? "closed" : ""} ${
-                    selectedConversation?.id === c.id ? "active" : ""
-                  }`}
+                  className={`
+                    ${c.status === "CLOSED" ? "closed" : ""}
+                    ${selectedConversation?.id === c.id ? "active" : ""}
+                  `}
                 >
                   <strong>{c.customerName}</strong> <br />
-                  {c.channel} - {c.status}
-                  <br />
+                  {c.channel} — {c.status} <br />
                   Agent: {c.agent?.name}
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* Chat Window */}
           <div className="chat-window">
             {selectedConversation ? (
               <>
                 <h3>
-                  Chat with {selectedConversation.customerName} ({selectedConversation.channel})
+                  Chat with {selectedConversation.customerName} (
+                  {selectedConversation.channel})
                 </h3>
+
                 <p>
                   <strong>Agent:</strong> {selectedConversation.agent?.name}
                 </p>
@@ -203,7 +238,8 @@ function App() {
                 <div className="messages">
                   {selectedConversation.messages.map((m, idx) => (
                     <div key={idx} className="message">
-                      <strong>{m.sender}:</strong> {m.content} <br />
+                      <strong>{m.sender}:</strong> {m.content}
+                      <br />
                       <small>{new Date(m.timestamp).toLocaleString()}</small>
                     </div>
                   ))}
@@ -231,18 +267,19 @@ function App() {
                 </div>
               </>
             ) : (
-              <p>Select a conversation to view details</p>
+              <p>Select a conversation to view details.</p>
             )}
           </div>
         </div>
       )}
 
-      {/* Agents Dashboard */}
+      {/* Agents Screen */}
       {activeTab === "agents" && (
         <div className="agents-dashboard">
           <h3>Live Agents</h3>
+
           {loadingAgents ? (
-            <p>Loading agents...</p>
+            <p>Loading...</p>
           ) : (
             <table>
               <thead>
@@ -252,6 +289,7 @@ function App() {
                   <th>Status</th>
                 </tr>
               </thead>
+
               <tbody>
                 {agents.map((agent) => (
                   <tr key={agent.id}>
@@ -259,9 +297,10 @@ function App() {
                     <td>{agent.name}</td>
                     <td>
                       <span
-                        className={`badge ${
-                          agent.status === "AVAILABLE" ? "available" : "busy"
-                        }`}
+                        className={
+                          "badge " +
+                          (agent.status === "AVAILABLE" ? "available" : "busy")
+                        }
                       >
                         {agent.status}
                       </span>
