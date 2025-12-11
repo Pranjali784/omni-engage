@@ -1,34 +1,34 @@
-/* Make root elements always full height */
+/* GLOBAL RESET */
 html, body, #root {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* prevent double scroll */
+  overflow: hidden; /* prevent global double scroll */
+  font-family: Arial, sans-serif;
 }
 
-/* Full screen layout */
+/* FULL APP LAYOUT */
 .app-container {
-  font-family: Arial, sans-serif;
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
+/* HEADER */
 h1 {
   text-align: center;
   background: #1f2937;
   color: white;
   padding: 15px;
-  margin: 0;              /* remove margin gap */
-  border-radius: 0;       /* remove round edges to stick to top */
+  margin: 0;
 }
 
+/* TABS */
 .tabs {
   display: flex;
   justify-content: center;
-  margin: 0;
   background: #f9f9f9;
   padding: 8px;
 }
@@ -37,8 +37,9 @@ h1 {
   padding: 8px 15px;
   margin: 0 5px;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
+  border-radius: 4px;
+  background: #e5e7eb;
 }
 
 .tabs .active {
@@ -46,33 +47,30 @@ h1 {
   color: white;
 }
 
+/* MAIN DASHBOARD LAYOUT */
 .dashboard {
+  flex: 1;
   display: flex;
-  flex: 1;               /* take full remaining height */
-  overflow: hidden;       /* stop page scroll */
+  overflow: hidden; /* STOP unwanted scrollbars */
 }
 
+/* SIDEBAR (LEFT COLUMN) */
 .sidebar {
-  width: 30%;
+  width: 28%;
+  min-width: 260px;
   border-right: 1px solid #ccc;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: auto;  /* Only vertical scroll allowed */
+  overflow-x: hidden; /* FIX horizontal scrollbar */
 }
 
-.chat-window {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  overflow: hidden;
-}
-
+/* FILTERS */
 .filters {
-  margin-bottom: 10px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .filters select,
@@ -81,42 +79,64 @@ h1 {
   flex: 1;
 }
 
+/* CONVERSATION LIST */
 .sidebar ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  flex: 1;
 }
 
 .sidebar li {
-  padding: 8px;
-  margin: 5px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
   cursor: pointer;
+  background: white;
+  transition: background 0.15s ease;
 }
 
-.sidebar li.active {
-  background: #e5f0ff;
-}
-
-.sidebar li.closed {
-  color: gray;
+.sidebar li:hover {
   background: #f3f4f6;
 }
 
-.chat-window .messages {
+.sidebar li.active {
+  background: #e0edff;
+}
+
+.sidebar li.closed {
+  background: #f8f8f8;
+  color: #6b7280;
+}
+
+/* CHAT WINDOW RIGHT SIDE */
+.chat-window {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  overflow: hidden;
+}
+
+/* MESSAGE LIST */
+.messages {
+  flex: 1;
+  padding: 12px;
   border: 1px solid #ddd;
-  padding: 10px;
-  overflow-y: auto;
-  margin-bottom: 10px;
+  border-radius: 6px;
+  overflow-y: auto; /* Only messages scroll */
+  overflow-x: hidden;
+  margin-bottom: 12px;
+  background: white;
 }
 
+/* MESSAGE ITEM */
 .message {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+  line-height: 1.4;
 }
 
+/* REPLY BOX */
 .reply-box {
   display: flex;
   gap: 10px;
@@ -130,50 +150,47 @@ h1 {
 .reply-box button {
   padding: 8px 12px;
   cursor: pointer;
+  border-radius: 4px;
+  border: none;
 }
 
-.reply-box .close-btn {
+.close-btn {
   background: red;
   color: white;
-  border: none;
-  border-radius: 5px;
 }
 
 .reopen-btn {
-  background: green;
+  background: #059669;
   color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 12px;
 }
 
+/* AGENTS DASHBOARD */
 .agents-dashboard {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
 }
 
-.agents-dashboard table {
+table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.agents-dashboard th,
-.agents-dashboard td {
+th, td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
 }
 
 .badge.available {
-  background: green;
+  background: #059669;
   color: white;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .badge.busy {
-  background: red;
+  background: #dc2626;
   color: white;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
