@@ -2,7 +2,6 @@ package com.project.agent_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -19,10 +18,9 @@ public class SecurityConfig {
                                 "/api/agents/**",
                                 "/api/conversations/**",
                                 "/actuator/**"
-                        ).permitAll()              // 👈 VERY IMPORTANT
-                        .anyRequest().permitAll()  // allow everything
-                )
-                .httpBasic(Customizer.withDefaults());
+                        ).permitAll()
+                        .anyRequest().permitAll()
+                );
 
         return http.build();
     }

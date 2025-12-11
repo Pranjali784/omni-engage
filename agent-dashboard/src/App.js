@@ -1,11 +1,9 @@
-// App.js (Final - Docker Ready)
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
-// ✅ Base URLs (Dynamic for Local + Docker)
+// Base URLs for Deployment
 const AGENT_API_BASE = process.env.REACT_APP_AGENT_API_BASE || "http://localhost:8081";
-const INGESTION_API_BASE = process.env.REACT_APP_INGESTION_API_BASE || "http://localhost:8080";
 
 function App() {
   const [activeTab, setActiveTab] = useState("conversations");
@@ -25,9 +23,8 @@ function App() {
       if (filters.status) params.append("status", filters.status);
 
       const url = `${AGENT_API_BASE}/api/conversations/filter?${params.toString()}`;
-      const response = await axios.get(url, {
-        auth: { username: "user", password: "password" },
-      });
+
+      const response = await axios.get(url);
 
       const sortedConversations = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -42,9 +39,7 @@ function App() {
   const fetchAgents = async () => {
     setLoadingAgents(true);
     try {
-      const response = await axios.get(`${AGENT_API_BASE}/api/agents`, {
-        auth: { username: "user", password: "password" },
-      });
+      const response = await axios.get(`${AGENT_API_BASE}/api/agents`);
       setAgents(response.data);
     } catch (err) {
       console.error("Failed to fetch agents", err);
@@ -53,7 +48,7 @@ function App() {
     }
   };
 
-  // Auto-refresh every 10s
+  // Auto Refresh
   useEffect(() => {
     if (activeTab === "conversations") {
       fetchConversations();
@@ -69,22 +64,26 @@ function App() {
   // Send Reply
   const sendReply = async () => {
     if (!selectedConversation || !reply.trim()) return;
+
     try {
       await axios.post(
         `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/messages`,
-        { content: reply, sender: "Agent" },
-        { auth: { username: "user", password: "password" } }
+        { content: reply, sender: "Agent" }
       );
+
       setReply("");
+
       const newMessage = {
         sender: "Agent",
         content: reply,
         timestamp: new Date().toISOString(),
       };
+
       setSelectedConversation((prev) => ({
         ...prev,
         messages: [...prev.messages, newMessage],
       }));
+
       fetchConversations();
     } catch (err) {
       console.error("Failed to send reply", err);
@@ -94,12 +93,9 @@ function App() {
   // Close Conversation
   const closeConversation = async () => {
     if (!selectedConversation) return;
+
     try {
-      await axios.post(
-        `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/close`,
-        {},
-        { auth: { username: "user", password: "password" } }
-      );
+      await axios.post(`${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/close`);
       setSelectedConversation({ ...selectedConversation, status: "CLOSED" });
       fetchConversations();
     } catch (err) {
@@ -110,12 +106,9 @@ function App() {
   // Reopen Conversation
   const reopenConversation = async () => {
     if (!selectedConversation) return;
+
     try {
-      await axios.post(
-        `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/reopen`,
-        {},
-        { auth: { username: "user", password: "password" } }
-      );
+      await axios.post(`${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/reopen`);
       setSelectedConversation({ ...selectedConversation, status: "OPEN" });
       fetchConversations();
     } catch (err) {
@@ -127,7 +120,6 @@ function App() {
     <div className="app-container">
       <h1>Omni-Engage Dashboard</h1>
 
-      {/* Tabs */}
       <div className="tabs">
         <button
           className={activeTab === "conversations" ? "active" : ""}
@@ -202,8 +194,7 @@ function App() {
             {selectedConversation ? (
               <>
                 <h3>
-                  Chat with {selectedConversation.customerName} (
-                  {selectedConversation.channel})
+                  Chat with {selectedConversation.customerName} ({selectedConversation.channel})
                 </h3>
                 <p>
                   <strong>Agent:</strong> {selectedConversation.agent?.name}
@@ -220,11 +211,9 @@ function App() {
 
                 <div className="reply-box">
                   {selectedConversation.status === "CLOSED" ? (
-                    <>
-                      <button onClick={reopenConversation} className="reopen-btn">
-                        Reopen Conversation
-                      </button>
-                    </>
+                    <button onClick={reopenConversation} className="reopen-btn">
+                      Reopen Conversation
+                    </button>
                   ) : (
                     <>
                       <input
