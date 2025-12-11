@@ -194,3 +194,37 @@ th, td {
   padding: 4px 8px;
   border-radius: 4px;
 }
+
+/* FIX: prevent horizontal scrollbar forever */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden !important; /* force remove horizontal scroll */
+}
+
+/* FIX: reply section overflowing screen width */
+.reply-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: nowrap;        /* keep everything on one line */
+  overflow: hidden;         /* prevent horizontal overflow */
+}
+
+.reply-box input {
+  flex: 1;
+  min-width: 0;             /* CRITICAL: prevents input from forcing overflow */
+}
+
+.reply-box button {
+  white-space: nowrap;      /* prevents buttons from stretching weirdly */
+}
+
+/* FIX: sidebar bottom overflow causing scrollbar */
+.sidebar {
+  overflow-y: auto;
+  overflow-x: hidden !important;
+}
