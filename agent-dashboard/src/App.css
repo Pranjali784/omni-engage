@@ -1,14 +1,27 @@
-/* GLOBAL RESET */
+/* ===========================================
+   GLOBAL RESET
+   =========================================== */
 html, body, #root {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* prevent global double scroll */
+  overflow: hidden; /* prevent global scroll */
   font-family: Arial, sans-serif;
 }
 
-/* FULL APP LAYOUT */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure horizontal scroll can NEVER appear */
+html, body {
+  overflow-x: hidden !important;
+}
+
+/* ===========================================
+   APP CONTAINER
+   =========================================== */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -16,7 +29,9 @@ html, body, #root {
   width: 100%;
 }
 
-/* HEADER */
+/* ===========================================
+   HEADER
+   =========================================== */
 h1 {
   text-align: center;
   background: #1f2937;
@@ -25,7 +40,9 @@ h1 {
   margin: 0;
 }
 
-/* TABS */
+/* ===========================================
+   TABS
+   =========================================== */
 .tabs {
   display: flex;
   justify-content: center;
@@ -47,14 +64,18 @@ h1 {
   color: white;
 }
 
-/* MAIN DASHBOARD LAYOUT */
+/* ===========================================
+   MAIN DASHBOARD LAYOUT
+   =========================================== */
 .dashboard {
   flex: 1;
   display: flex;
-  overflow: hidden; /* STOP unwanted scrollbars */
+  overflow: hidden; /* MASTER FIX: stops full-page scroll bars */
 }
 
-/* SIDEBAR (LEFT COLUMN) */
+/* ===========================================
+   SIDEBAR (LEFT)
+   =========================================== */
 .sidebar {
   width: 28%;
   min-width: 260px;
@@ -62,11 +83,11 @@ h1 {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;  /* Only vertical scroll allowed */
-  overflow-x: hidden; /* FIX horizontal scrollbar */
+  overflow-y: auto;  
+  overflow-x: hidden !important;
 }
 
-/* FILTERS */
+/* FILTER CONTROLS */
 .filters {
   display: flex;
   gap: 8px;
@@ -77,9 +98,10 @@ h1 {
 .filters input {
   padding: 6px;
   flex: 1;
+  min-width: 0;
 }
 
-/* CONVERSATION LIST */
+/* LIST OF CONVERSATIONS */
 .sidebar ul {
   list-style: none;
   padding: 0;
@@ -109,51 +131,62 @@ h1 {
   color: #6b7280;
 }
 
-/* CHAT WINDOW RIGHT SIDE */
+/* ===========================================
+   CHAT WINDOW (RIGHT)
+   =========================================== */
 .chat-window {
   flex: 1;
   display: flex;
   flex-direction: column;
   padding: 14px;
-  overflow: hidden;
+  overflow: hidden;     /* absolutely no scroll */
+  min-width: 0 !important; /* CRITICAL FOR FLEX layout */
 }
 
-/* MESSAGE LIST */
+/* MESSAGES PANEL */
 .messages {
   flex: 1;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  overflow-y: auto; /* Only messages scroll */
+  overflow-y: auto;
   overflow-x: hidden;
-  margin-bottom: 12px;
   background: white;
+  margin-bottom: 12px;
 }
 
-/* MESSAGE ITEM */
 .message {
   margin-bottom: 14px;
   line-height: 1.4;
 }
 
-/* REPLY BOX */
+/* ===========================================
+   REPLY BOX
+   =========================================== */
 .reply-box {
   display: flex;
   gap: 10px;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow: hidden;  /* ❤️ REAL fix for your scroll bar */
 }
 
 .reply-box input {
   flex: 1;
   padding: 8px;
+  min-width: 0 !important; /* prevents overflow forcing */
 }
 
 .reply-box button {
   padding: 8px 12px;
-  cursor: pointer;
+  white-space: nowrap;
   border-radius: 4px;
   border: none;
+  cursor: pointer;
 }
 
+/* BUTTON COLORS */
 .close-btn {
   background: red;
   color: white;
@@ -164,11 +197,14 @@ h1 {
   color: white;
 }
 
-/* AGENTS DASHBOARD */
+/* ===========================================
+   AGENTS DASHBOARD
+   =========================================== */
 .agents-dashboard {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden !important;
 }
 
 table {
@@ -181,6 +217,7 @@ th, td {
   padding: 10px;
 }
 
+/* BADGES */
 .badge.available {
   background: #059669;
   color: white;
@@ -193,38 +230,4 @@ th, td {
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
-}
-
-/* FIX: prevent horizontal scrollbar forever */
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  overflow-x: hidden !important; /* force remove horizontal scroll */
-}
-
-/* FIX: reply section overflowing screen width */
-.reply-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  flex-wrap: nowrap;        /* keep everything on one line */
-  overflow: hidden;         /* prevent horizontal overflow */
-}
-
-.reply-box input {
-  flex: 1;
-  min-width: 0;             /* CRITICAL: prevents input from forcing overflow */
-}
-
-.reply-box button {
-  white-space: nowrap;      /* prevents buttons from stretching weirdly */
-}
-
-/* FIX: sidebar bottom overflow causing scrollbar */
-.sidebar {
-  overflow-y: auto;
-  overflow-x: hidden !important;
 }
