@@ -1,226 +1,310 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./App.css";
-
-const AGENT_API_BASE =
-  process.env.REACT_APP_AGENT_API_BASE || "http://localhost:8081";
-
-function App() {
-  const [activeTab, setActiveTab] = useState("conversations");
-  const [conversations, setConversations] = useState([]);
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const [reply, setReply] = useState("");
-  const [filters, setFilters] = useState({
-    channel: "",
-    agentName: "",
-    status: "",
-  });
-  const [agents, setAgents] = useState([]);
-  const [loadingAgents, setLoadingAgents] = useState(false);
-
-  // Dark mode state
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("darkMode") === "true"
-  );
-
-  // Sidebar toggle for mobile
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  useEffect(() => {
-    document.body.setAttribute("data-theme", darkMode ? "dark" : "light");
-    localStorage.setItem("darkMode", darkMode);
-  }, [darkMode]);
-
-  const fetchConversations = async () => {
-    try {
-      const params = new URLSearchParams();
-      if (filters.channel) params.append("channel", filters.channel);
-      if (filters.agentName) params.append("agentName", filters.agentName);
-      if (filters.status) params.append("status", filters.status);
-
-      const response = await axios.get(
-        `${AGENT_API_BASE}/api/conversations/filter?${params.toString()}`
-      );
-
-      const sorted = response.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-
-      setConversations(sorted);
-    } catch (err) {
-      console.error("Failed fetching conversations", err);
-    }
-  };
-
-  const fetchAgents = async () => {
-    setLoadingAgents(true);
-    try {
-      const response = await axios.get(`${AGENT_API_BASE}/api/agents`);
-      setAgents(response.data);
-    } catch (err) {
-      console.error("Failed fetching agents", err);
-    }
-    setLoadingAgents(false);
-  };
-
-  useEffect(() => {
-    if (activeTab === "conversations") {
-      fetchConversations();
-      const interval = setInterval(fetchConversations, 10000);
-      return () => clearInterval(interval);
-    } else {
-      fetchAgents();
-      const interval = setInterval(fetchAgents, 10000);
-      return () => clearInterval(interval);
-    }
-  }, [activeTab, filters]);
-
-  const sendReply = async () => {
-    if (!reply.trim()) return;
-    try {
-      await axios.post(
-        `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/messages`,
-        { content: reply, sender: "Agent" }
-      );
-      setReply("");
-      fetchConversations();
-    } catch (err) {
-      console.error("Failed to send reply", err);
-    }
-  };
-
-  const closeConversation = async () => {
-    try {
-      await axios.post(
-        `${AGENT_API_BASE}/api/conversations/${selectedConversation.id}/close`
-      );
-      fetchConversations();
-    } catch (err) {
-      console.error("Failed to close conversation", err);
-    }
-  };
-
-  return (
-    <div className="app-container">
-
-      {/* HEADER */}
-      <header>
-        <h1>Omni-Engage Dashboard</h1>
-
-        <div className="header-right">
-          <button
-            className="dark-toggle"
-            onClick={() => setDarkMode(!darkMode)}
-          >
-            {darkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
-          </button>
-        </div>
-      </header>
-
-      {/* TABS */}
-      <div className="tabs">
-        <button
-          className={activeTab === "conversations" ? "active" : ""}
-          onClick={() => setActiveTab("conversations")}
-        >
-          Conversations
-        </button>
-        <button
-          className={activeTab === "agents" ? "active" : ""}
-          onClick={() => setActiveTab("agents")}
-        >
-          Agents
-        </button>
-      </div>
-
-      {/* LAYOUT */}
-      <div className="dashboard">
-
-        {/* MOBILE SIDEBAR TOGGLE */}
-        <button
-          className="mobile-sidebar-toggle"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          ☰ Menu
-        </button>
-
-        {/* SIDEBAR */}
-        <div className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
-          <div className="filters">
-            <select
-              value={filters.channel}
-              onChange={(e) =>
-                setFilters({ ...filters, channel: e.target.value })
-              }
-            >
-              <option value="">All Channels</option>
-              <option value="EMAIL">Email</option>
-              <option value="CHAT">Chat</option>
-              <option value="WHATSAPP">WhatsApp</option>
-              <option value="INSTAGRAM">Instagram</option>
-            </select>
-
-            <input
-              placeholder="Agent Name"
-              value={filters.agentName}
-              onChange={(e) =>
-                setFilters({ ...filters, agentName: e.target.value })
-              }
-            />
-          </div>
-
-          <ul>
-            {conversations.map((c) => (
-              <li
-                key={c.id}
-                onClick={() => setSelectedConversation(c)}
-                className={selectedConversation?.id === c.id ? "active" : ""}
-              >
-                <strong>{c.customerName}</strong>
-                <span>{c.channel} — {c.status}</span>
-                <small>Agent: {c.agent?.name}</small>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* CHAT WINDOW */}
-        <div className="chat-window">
-          {!selectedConversation ? (
-            <div className="empty-view">Select a conversation</div>
-          ) : (
-            <>
-              <h3>
-                Chat with {selectedConversation.customerName} (
-                {selectedConversation.channel})
-              </h3>
-
-              <div className="messages">
-                {selectedConversation.messages.map((m, i) => (
-                  <div key={i} className="message">
-                    <strong>{m.sender}: </strong>
-                    <span>{m.content}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="reply-box">
-                <input
-                  value={reply}
-                  onChange={(e) => setReply(e.target.value)}
-                  placeholder="Type a reply..."
-                />
-                <button onClick={sendReply}>Send</button>
-                <button className="close" onClick={closeConversation}>
-                  Close
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+/* =========================
+   GLOBAL RESET & BASE STYLES
+   ========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-export default App;
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: "Inter", Arial, sans-serif;
+  background: #f9fafb;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+h1 {
+  text-align: center;
+  background: #1f2937;
+  color: white;
+  padding: 18px;
+  letter-spacing: 0.5px;
+  font-size: 26px;
+}
+
+/* =========================
+   TABS
+   ========================= */
+.tabs {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background: #f3f4f6;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabs button {
+  padding: 10px 18px;
+  margin: 0 6px;
+  border: none;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: 0.2s;
+}
+
+.tabs button.active {
+  background: #2563eb;
+  color: white;
+}
+
+/* =========================
+   MAIN DASHBOARD
+   ========================= */
+.dashboard {
+  height: 100%;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* =========================
+   SIDEBAR (Conversations)
+   ========================= */
+.sidebar {
+  width: 50%;
+  max-width: 420px;
+  min-width: 300px;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform 0.3s ease;
+}
+
+/* Mobile sidebar behaviour */
+.sidebar.hide-sidebar {
+  transform: translateX(-100%);
+}
+
+.sidebar.show-sidebar {
+  transform: translateX(0%);
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filters select,
+.filters input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  flex: 1;
+}
+
+/* Conversation list */
+.sidebar h2 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  background: #ffffff;
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.sidebar li:hover {
+  background: #f3f4f6;
+}
+
+.sidebar li.active {
+  background: #e0edff;
+  border-color: #2563eb;
+}
+
+.sidebar li strong {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.sidebar small {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* =========================
+   CHAT WINDOW
+   ========================= */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  background: #f9fafb;
+  overflow: hidden;
+}
+
+.chat-window h3 {
+  margin-bottom: 12px;
+  font-size: 22px;
+}
+
+/* Back button (MOBILE ONLY) */
+.back-btn {
+  display: none;
+  margin-bottom: 10px;
+  padding: 8px 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Message list */
+.messages {
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  padding: 14px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.message {
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.message strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Reply box */
+.reply-box {
+  display: flex;
+  margin-top: 14px;
+  gap: 10px;
+}
+
+.reply-box input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.reply-box button {
+  padding: 12px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* =========================
+   AGENTS TABLE
+   ========================= */
+.agents-dashboard {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.agents-dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.agents-dashboard th, td {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.badge.available {
+  background: #059669;
+  color: white;
+}
+
+.badge.busy {
+  background: #dc2626;
+  color: white;
+}
+
+/* =========================
+   RESPONSIVE BREAKPOINTS
+   ========================= */
+
+/* Tablets (<=1024px) */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 40%;
+  }
+}
+
+/* Mobile (<=768px) */
+@media (max-width: 768px) {
+  .dashboard {
+    position: relative;
+  }
+
+  .sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    max-width: 100%;
+    z-index: 10;
+    box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+  }
+
+  .back-btn {
+    display: block;
+  }
+
+  .chat-window {
+    padding: 12px;
+  }
+}
+
+/* Small Mobile (<=480px) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+  }
+
+  .tabs button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .sidebar li {
+    padding: 10px;
+  }
+}
