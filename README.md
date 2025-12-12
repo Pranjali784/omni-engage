@@ -6,18 +6,17 @@
 A modern **microservices-based omni-channel engagement system** built with:
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Java-17-blue.svg?logo=java&logoColor=white">
+  <img src="https://img.shields.io/badge/Java-17-5382A1.svg?logo=java&logoColor=white">
 <img src="https://img.shields.io/badge/Spring_Boot-3.3.x-6DB33F.svg?logo=spring&logoColor=white">
-<img src="https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=white">
-<img src="https://img.shields.io/badge/TiDB_Cloud-DistributedSQL-red.svg?logo=tidb&logoColor=white">
+<img src="https://img.shields.io/badge/React-18-087EA4.svg?logo=react&logoColor=white">
+<img src="https://img.shields.io/badge/TiDB_Cloud-Distributed_SQL-BF0A30.svg?logo=tidb&logoColor=white">
 <img src="https://img.shields.io/badge/Docker-Containerized-2496ED.svg?logo=docker&logoColor=white">
-<img src="https://img.shields.io/badge/Maven-Build%20Tool-C71A36.svg?logo=apachemaven&logoColor=white">
-<img src="https://img.shields.io/badge/Render-Backend%20Hosting-46E3B7.svg?logo=render&logoColor=black">
-<img src="https://img.shields.io/badge/Vercel-Frontend%20Hosting-ff69b4.svg?logo=vercel&logoColor=white">
-<img src="https://img.shields.io/badge/Postman-API%20Testing-FF6C37.svg?logo=postman&logoColor=white">
-<img src="https://img.shields.io/badge/JMeter-Load%20Testing-D22128.svg?logo=apachejmeter&logoColor=white">
-<img src="https://img.shields.io/badge/UptimeRobot-Monitoring-5CCD18.svg?logo=uptimekuma&logoColor=white">
-<img src="https://img.shields.io/badge/Microservices-Architecture-critical.svg">
+<img src="https://img.shields.io/badge/Maven-Build_Tool-C71A36.svg?logo=apachemaven&logoColor=white">
+<img src="https://img.shields.io/badge/Render-Backend_Hosting-46E3B7.svg?logo=render&logoColor=black">
+<img src="https://img.shields.io/badge/Vercel-Frontend_Hosting-FF69B4.svg?logo=vercel&logoColor=white">
+<img src="https://img.shields.io/badge/Postman-API_Testing-FF6C37.svg?logo=postman&logoColor=white">
+<img src="https://img.shields.io/badge/JMeter-Load_Testing-D22128.svg?logo=apachejmeter&logoColor=white">
+<img src="https://img.shields.io/badge/UptimeRobot-Monitoring-5CCD18.svg?logo=uptimerobot&logoColor=white">
 </p>
 
 **Omni-Engage** provides a unified dashboard where support agents can manage conversations from **Facebook, WhatsApp, Instagram, Email, Chat, and more** — all in one place.
@@ -304,5 +303,6 @@ SPRING_DATASOURCE_PASSWORD=
 > 🚀 *Omni-Engage represents a fully modern, scalable, production-grade microservices system built using today’s best practices.*
 
 ---
+
 
 
