@@ -1,16 +1,24 @@
+
+---
+
 # 🌐 **Omni-Engage — Unified Customer Engagement Platform**
 
 A modern **microservices-based omni-channel engagement system** built with:
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17-blue.svg?logo=java&logoColor=white">
-  <img src="https://img.shields.io/badge/Spring_Boot-3.3.x-6DB33F.svg?logo=spring&logoColor=white">
-  <img src="https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=white">
-  <img src="https://img.shields.io/badge/TiDB_Cloud-DistributedSQL-red.svg?logo=tidb&logoColor=white">
-  <img src="https://img.shields.io/badge/Docker-Active-blue.svg?logo=docker">
-  <img src="https://img.shields.io/badge/Microservices-Architecture-critical.svg">
+<img src="https://img.shields.io/badge/Spring_Boot-3.3.x-6DB33F.svg?logo=spring&logoColor=white">
+<img src="https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=white">
+<img src="https://img.shields.io/badge/TiDB_Cloud-DistributedSQL-red.svg?logo=tidb&logoColor=white">
+<img src="https://img.shields.io/badge/Docker-Containerized-2496ED.svg?logo=docker&logoColor=white">
+<img src="https://img.shields.io/badge/Maven-Build%20Tool-C71A36.svg?logo=apachemaven&logoColor=white">
+<img src="https://img.shields.io/badge/Render-Backend%20Hosting-46E3B7.svg?logo=render&logoColor=black">
+<img src="https://img.shields.io/badge/Vercel-Frontend%20Hosting-ff69b4.svg?logo=vercel&logoColor=white">
+<img src="https://img.shields.io/badge/Postman-API%20Testing-FF6C37.svg?logo=postman&logoColor=white">
+<img src="https://img.shields.io/badge/JMeter-Load%20Testing-D22128.svg?logo=apachejmeter&logoColor=white">
+<img src="https://img.shields.io/badge/UptimeRobot-Monitoring-5CCD18.svg?logo=uptimekuma&logoColor=white">
+<img src="https://img.shields.io/badge/Microservices-Architecture-critical.svg">
 </p>
-
 
 **Omni-Engage** provides a unified dashboard where support agents can manage conversations from **Facebook, WhatsApp, Instagram, Email, Chat, and more** — all in one place.
 
@@ -41,6 +49,9 @@ Inspired by platforms like **Zendesk**, **Freshdesk**, **Intercom**, and **Sales
 * [🚀 Getting Started](#-getting-started)
 * [⚙️ Tech Stack](#️-tech-stack)
 * [🧠 Core Features](#-core-features)
+* [🧪 API Testing](#-api-testing)
+* [🚦 Load Testing](#-load-testing)
+* [🌐 Monitoring & Uptime](#-monitoring--uptime)
 * [📦 Deployment Guide](#-deployment-guide)
 * [📈 Future Enhancements](#-future-enhancements)
 * [👩‍💼 Author](#-author)
@@ -113,58 +124,6 @@ docker compose up -d --build
 | **Agent Health Check**     | [http://localhost:8081/actuator/health](http://localhost:8081/actuator/health) |
 | **Ingestion Health Check** | [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health) |
 
-### Stop Services
-
-```bash
-docker compose down
-```
-
-### Reset Database
-
-```bash
-docker compose down -v
-```
-
----
-
-## 💻 **Run Locally Without Docker**
-
-<details>
-<summary>Click to expand</summary>
-
-### 1️⃣ Start Agent Service
-
-```bash
-cd agent-service
-cp src/main/resources/application-example.properties src/main/resources/application.properties
-./mvnw spring-boot:run
-```
-
-### 2️⃣ Start Ingestion Service
-
-```bash
-cd ingestion-service
-./mvnw spring-boot:run
-```
-
-### 3️⃣ Start React Dashboard
-
-```bash
-cd agent-dashboard
-npm install
-npm start
-```
-
-### 4️⃣ Database Config (TiDB Cloud or MySQL)
-
-```
-DB: omni_engage_db
-User: omni
-Password: omni123
-```
-
-</details>
-
 ---
 
 # ⚙️ **Tech Stack**
@@ -184,37 +143,30 @@ Password: omni123
 * Axios
 * Bootstrap / Custom CSS
 
-### **Database**
-
-* TiDB Cloud (Recommended: Serverless Tier)
-* MySQL 8 Compatible
-
 ### **DevOps**
 
 * Docker Compose
-* Render (Backend)
-* Vercel (Frontend)
-* GitHub
+* Render
+* Vercel
+* UptimeRobot (Monitoring)
 
 ---
 
 # 🧠 **Core Features**
 
-### 🎧 **Agent Management**
+### 🎧 Agent Management
 
-* Manage availability
+* Availability tracking
 * Auto-assignment with locking
-* Prevents race conditions using SQL `FOR UPDATE`
+* Prevents race conditions
 
-### 💬 **Conversation Management**
+### 💬 Conversation Management
 
-* Create / Close / Reopen conversations
-* Messages linked with timestamps
+* Create / Close / Reopen
+* Timestamped messages
 * Channel-specific sorting
 
-### 🌐 **Omni-channel Support**
-
-Works for:
+### 🌐 Omni-channel Support
 
 * WhatsApp
 * Facebook
@@ -222,42 +174,92 @@ Works for:
 * Email
 * In-App Chat
 
-### 🔍 **Filtering**
-
-Filter conversations by:
+### 🔍 Filtering
 
 * Channel
 * Agent
-* Status (OPEN / CLOSED)
+* Status
 
-### ♻ **Real-Time Updates**
+### ♻ Real-Time Updates
 
-Polling & auto-refresh integrated.
+* Polling
+* Auto-refresh
 
-### 📊 **Production-Ready**
+### 📊 Production-Ready
 
 * Actuator health checks
-* Environment-based configuration
+* Configurable environments
 * Containerized microservices
+
+---
+
+# 🧪 **API Testing**
+
+All REST endpoints were validated using **Postman**.
+
+**Tested areas include:**
+
+* Agent lifecycle & availability
+* Conversation creation, assignment & closure
+* Message ingestion across channels
+* Error handling & actuator endpoints
+
+This ensures correctness, stability, and predictable API behavior.
+
+---
+
+# 🚦 **Load Testing**
+
+**Apache JMeter** was used to stress-test both microservices under concurrent load.
+
+**Key scenarios tested:**
+
+* Rapid message ingestion
+* Parallel conversation creation
+* High agent concurrency
+* TiDB Cloud under heavy read/write volume
+
+The platform maintained **low latency** and **stable throughput** during load testing.
+
+---
+
+# 🌐 **Monitoring & Uptime**
+
+To prevent Render’s free-tier servers from sleeping, **UptimeRobot** continuously pings:
+
+```
+/actuator/health
+```
+
+For both:
+
+* Agent Service
+* Ingestion Service
+
+**Ping interval:** every 1 minute
+
+This ensures:
+
+* No cold starts
+* Consistent response times
+* Reliable user experience
 
 ---
 
 # 📦 **Deployment Guide**
 
-### ✔ Frontend → Deploy on **Vercel**
+### ✔ Frontend → Deploy on Vercel
 
-Just connect the repo & set:
+Set environment variables:
 
 ```
 REACT_APP_AGENT_API=https://your-agent-service.onrender.com
 REACT_APP_INGESTION_API=https://your-ingestion-service.onrender.com
 ```
 
-### ✔ Backend → Deploy on **Render**
+### ✔ Backend → Deploy on Render
 
-Use Java buildpacks or Docker.
-
-Set environment variables:
+Set:
 
 ```
 SPRING_DATASOURCE_URL=
@@ -265,36 +267,35 @@ SPRING_DATASOURCE_USERNAME=
 SPRING_DATASOURCE_PASSWORD=
 ```
 
-### ✔ Database → Use **TiDB Cloud**
+### ✔ Database → TiDB Cloud
 
 * MySQL-compatible
 * Scalable
 * Serverless
-* Perfect for chat/real-time workloads
 
 ---
 
 # 📈 **Future Enhancements (2025 Roadmap)**
 
-* [ ] Replace polling with **WebSockets / Server-Sent Events (SSE)**
-* [ ] Deploy using **AWS ECS/EKS or Kubernetes**
-* [ ] Add **Redis Caching**
-* [ ] AI Agent Assistant (LLM Integration)
-* [ ] Real-time analytics dashboards using ClickHouse
-* [ ] SLA Tracking & Ticket Escalation Engine
-* [ ] Conversation auto-summarization using LLMs
+* WebSockets / SSE
+* Deployment on AWS ECS/EKS / Kubernetes
+* Redis caching
+* AI Agent Assistant
+* ClickHouse analytics
+* SLA workflows
+* LLM conversation summarization
 
 ---
 
 # 👩‍💼 **Author**
 
 **Pranjali Srivastava**
-*Java Developer | Backend Engineer | Microservices | SQL & Data Handling | Cloud Technologies*
+*Java Developer | Backend Engineer | Microservices | SQL & Cloud*
 📍 Chennai, India
 
 <p align="center">
-  <a href="https://www.linkedin.com/in/pranjali784/" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-Pranjali%20Srivastava-0077B5?style=for-the-badge&logo=linkedin&logoColor=white">
+  <a href="https://www.linkedin.com/in/pranjali784/">
+    <img src="https://img.shields.io/badge/LinkedIn-Pranjali%20Srivastava-0077B5?style=for-the-badge&logo=linkedin">
   </a>
 </p>
 
@@ -303,4 +304,5 @@ SPRING_DATASOURCE_PASSWORD=
 > 🚀 *Omni-Engage represents a fully modern, scalable, production-grade microservices system built using today’s best practices.*
 
 ---
+
 
