@@ -12,8 +12,17 @@ html, body, #root {
   width: 100%;
   font-family: "Inter", Arial, sans-serif;
   background: #f9fafb;
-  overflow: hidden; /* keep main overflow hidden */
+  overflow: hidden;   /* keep main hidden */
 }
+
+body {
+  overflow-y: hidden; /* prevent full page scroll */
+}
+
+#root {
+  overflow: hidden;
+}
+
 
 /* =========================
    HEADER
@@ -198,11 +207,18 @@ h1 {
 /* =========================
    AGENTS TABLE
    ========================= */
+.dashboard {
+  height: calc(100vh - 140px);
+  display: flex;
+  overflow: visible !important;  /* REQUIRED FOR AGENTS SCROLL */
+}
+
 .agents-dashboard {
   height: calc(100vh - 140px);
-  overflow-y: auto; /* FIX: scroll works */
+  overflow-y: auto !important;   /* FORCE SCROLLBAR */
   padding: 20px;
 }
+
 
 .agents-dashboard table {
   width: 100%;
