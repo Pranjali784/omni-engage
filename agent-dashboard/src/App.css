@@ -70,6 +70,7 @@ h1 {
 .dashboard {
   height: calc(100vh - 140px);
   display: flex;
+  /* FIX: allow dropdowns to appear properly */
   overflow: visible;
 }
 
@@ -138,34 +139,6 @@ h1 {
   font-size: 12px;
   color: #6b7280;
 }
-
-/* =========================
-   OPEN / CLOSED COLOR LOGIC
-   ========================= */
-
-/* Card turns GREEN if conversation is OPEN */
-.sidebar li:has(small:contains("OPEN")) {
-  background: #f0fff4 !important;       /* light green */
-  border-color: #a7f3d0 !important;
-}
-
-/* Card turns RED if conversation is CLOSED */
-.sidebar li:has(small:contains("CLOSED")) {
-  background: #fff5f5 !important;       /* light red */
-  border-color: #f5c2c2 !important;
-}
-
-/* Text color change */
-.sidebar small:contains("OPEN") {
-  color: #059669 !important; /* green */
-  font-weight: 600;
-}
-
-.sidebar small:contains("CLOSED") {
-  color: #dc2626 !important; /* red */
-  font-weight: 600;
-}
-
 
 /* =========================
    CHAT WINDOW
@@ -237,14 +210,15 @@ h1 {
 .dashboard {
   height: calc(100vh - 140px);
   display: flex;
-  overflow: visible !important;
+  overflow: visible !important;  /* REQUIRED FOR AGENTS SCROLL */
 }
 
 .agents-dashboard {
   height: calc(100vh - 140px);
-  overflow-y: auto !important;
+  overflow-y: auto !important;   /* FORCE SCROLLBAR */
   padding: 20px;
 }
+
 
 .agents-dashboard table {
   width: 100%;
