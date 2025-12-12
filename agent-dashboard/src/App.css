@@ -10,7 +10,8 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;   /* prevent sideways scroll */
+  overflow-y: auto;     /* allow vertical scroll */
   font-family: "Inter", Arial, sans-serif;
   background: #f9fafb;
 }
