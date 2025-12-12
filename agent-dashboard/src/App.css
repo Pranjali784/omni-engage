@@ -70,9 +70,9 @@ h1 {
    SIDEBAR (Conversations)
    ========================= */
 .sidebar {
-  width: 50%;
-  max-width: 420px;
-  min-width: 300px;
+  width: 50%;              /* exactly half screen */
+  min-width: 350px;        /* small safety */
+  max-width: none;         /* remove the 420px limit */
   background: white;
   border-right: 1px solid #e5e7eb;
   padding: 14px;
@@ -150,6 +150,7 @@ h1 {
    CHAT WINDOW
    ========================= */
 .chat-window {
+  width: 50%;
   flex: 1;
   display: flex;
   flex-direction: column;
