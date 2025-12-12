@@ -12,7 +12,7 @@ html, body, #root {
   width: 100%;
   font-family: "Inter", Arial, sans-serif;
   background: #f9fafb;
-  overflow: hidden;
+  overflow: hidden; /* keep main overflow hidden */
 }
 
 /* =========================
@@ -59,9 +59,10 @@ h1 {
    MAIN DASHBOARD
    ========================= */
 .dashboard {
-  height: calc(100vh - 140px); /* FIX: precise height for layout */
+  height: calc(100vh - 140px);
   display: flex;
-  overflow: hidden;
+  /* FIX: allow dropdowns to appear properly */
+  overflow: visible;
 }
 
 /* =========================
@@ -131,7 +132,7 @@ h1 {
 }
 
 /* =========================
-   CHAT WINDOW (RIGHT SIDE)
+   CHAT WINDOW
    ========================= */
 .chat-window {
   width: 50%;
@@ -140,7 +141,7 @@ h1 {
   background: #f9fafb;
   padding: 18px;
   height: 100%;
-  overflow: hidden; /* FIX: prevents outer scrolling */
+  overflow: hidden;
 }
 
 .chat-window h3 {
@@ -148,14 +149,14 @@ h1 {
   font-size: 22px;
 }
 
-/* Messages scrollable area */
+/* Messages scroll area */
 .messages {
   flex: 1;
   padding: 14px;
   background: white;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
-  overflow-y: auto; /* FIX: chat scrolls properly */
+  overflow-y: auto;
 }
 
 .message {
@@ -168,17 +169,13 @@ h1 {
   margin-bottom: 2px;
 }
 
-/* =========================
-   REPLY BOX (BOTTOM)
-   ========================= */
+/* Reply box fixed at bottom */
 .reply-box {
   display: flex;
   gap: 10px;
   padding: 14px;
   background: #f9fafb;
   border-top: 1px solid #e5e7eb;
-
-  /* FIX: stay at bottom of chat window */
   flex-shrink: 0;
 }
 
@@ -202,8 +199,8 @@ h1 {
    AGENTS TABLE
    ========================= */
 .agents-dashboard {
-  flex: 1;
-  overflow-y: auto;
+  height: calc(100vh - 140px);
+  overflow-y: auto; /* FIX: scroll works */
   padding: 20px;
 }
 
@@ -238,29 +235,22 @@ h1 {
 }
 
 /* =========================
-   RESPONSIVE BREAKPOINTS
+   RESPONSIVE
    ========================= */
 
 @media (max-width: 1024px) {
-  .sidebar {
-    width: 45%;
-  }
-  .chat-window {
-    width: 55%;
-  }
+  .sidebar { width: 45%; }
+  .chat-window { width: 55%; }
 }
 
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
   }
-
   .sidebar {
     width: 100%;
-    max-width: none;
     height: 45%;
   }
-
   .chat-window {
     width: 100%;
     height: 55%;
