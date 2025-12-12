@@ -117,19 +117,6 @@ h1 {
   border-color: #2563eb;
 }
 
-/* CLOSED conversation card */
-.sidebar li.closed {
-  background: #f3f3f3 !important;
-  border-color: #d1d5db;
-  opacity: 0.75; /* slightly dim */
-}
-
-/* CLOSED + SELECTED */
-.sidebar li.closed.active {
-  background: #e5e5e5 !important;
-  border-color: #9ca3af !important;
-  opacity: 1;
-}
 
 
 /* =========================
