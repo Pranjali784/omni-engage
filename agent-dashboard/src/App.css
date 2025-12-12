@@ -117,6 +117,20 @@ h1 {
   border-color: #2563eb;
 }
 
+/* CLOSED conversation card - detect the text inside the li */
+.sidebar li:has(small:contains("CLOSED")) {
+  background: #f3f4f6 !important;
+  border-color: #d1d5db !important;
+  opacity: 0.8;
+}
+
+/* CLOSED + SELECTED */
+.sidebar li.active:has(small:contains("CLOSED")) {
+  background: #e5e7eb !important;
+  border-color: #9ca3af !important;
+  opacity: 1;
+}
+
 /* =========================
    CHAT WINDOW
    ========================= */
