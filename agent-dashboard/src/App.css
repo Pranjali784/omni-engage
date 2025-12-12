@@ -10,9 +10,10 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
   font-family: "Inter", Arial, sans-serif;
   background: #f9fafb;
+  overflow-x: hidden;      /* Allow only horizontal hiding */
+  overflow-y: auto;        /* Fix: scrolling restored */
 }
 
 /* =========================
@@ -108,13 +109,22 @@ h1 {
   transition: 0.2s;
 }
 
+/* Hover effect */
 .sidebar li:hover {
   background: #f3f4f6;
 }
 
+/* Active conversation */
 .sidebar li.active {
   background: #e0edff;
   border-color: #2563eb;
+}
+
+/* CLOSED Conversation styling */
+.sidebar li.closed {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #7a1f24;
 }
 
 /* =========================
@@ -144,7 +154,7 @@ h1 {
   border: 1px solid #e5e7eb;
 }
 
-/* REPLY BOX — FIXED AT BOTTOM */
+/* REPLY BOX FIXED AT BOTTOM */
 .reply-box {
   display: flex;
   gap: 10px;
@@ -211,8 +221,6 @@ h1 {
 /* =========================
    RESPONSIVE
    ========================= */
-
-/* Tablets (<=1024px) */
 @media (max-width: 1024px) {
   .sidebar {
     width: 45%;
@@ -222,7 +230,6 @@ h1 {
   }
 }
 
-/* Mobile (<=768px) */
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
@@ -234,7 +241,6 @@ h1 {
   }
 }
 
-/* Small Mobile (<=480px) */
 @media (max-width: 480px) {
   h1 {
     font-size: 22px;
