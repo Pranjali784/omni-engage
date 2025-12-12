@@ -10,9 +10,9 @@
 html, body, #root {
   height: 100%;
   width: 100%;
+  overflow: hidden;
   font-family: "Inter", Arial, sans-serif;
   background: #f9fafb;
-  overflow: hidden;
 }
 
 /* =========================
@@ -56,10 +56,10 @@ h1 {
 }
 
 /* =========================
-   MAIN DASHBOARD
+   MAIN DASHBOARD LAYOUT
    ========================= */
 .dashboard {
-  height: calc(100vh - 140px); /* FIX: precise height for layout */
+  height: calc(100% - 120px);
   display: flex;
   overflow: hidden;
 }
@@ -69,8 +69,6 @@ h1 {
    ========================= */
 .sidebar {
   width: 50%;
-  max-width: 500px;
-  min-width: 350px;
   background: white;
   border-right: 1px solid #e5e7eb;
   padding: 14px;
@@ -102,8 +100,8 @@ h1 {
 
 .sidebar li {
   background: #ffffff;
-  padding: 16px;
-  margin-bottom: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   cursor: pointer;
@@ -119,28 +117,16 @@ h1 {
   border-color: #2563eb;
 }
 
-.sidebar li strong {
-  font-size: 16px;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.sidebar small {
-  font-size: 12px;
-  color: #6b7280;
-}
-
 /* =========================
-   CHAT WINDOW (RIGHT SIDE)
+   CHAT WINDOW
    ========================= */
 .chat-window {
   width: 50%;
   display: flex;
   flex-direction: column;
-  background: #f9fafb;
   padding: 18px;
-  height: 100%;
-  overflow: hidden; /* FIX: prevents outer scrolling */
+  background: #f9fafb;
+  overflow: hidden;
 }
 
 .chat-window h3 {
@@ -148,38 +134,24 @@ h1 {
   font-size: 22px;
 }
 
-/* Messages scrollable area */
+/* MESSAGE LIST */
 .messages {
   flex: 1;
-  padding: 14px;
   background: white;
   border-radius: 8px;
+  padding: 14px;
+  overflow-y: auto;
   border: 1px solid #e5e7eb;
-  overflow-y: auto; /* FIX: chat scrolls properly */
 }
 
-.message {
-  margin-bottom: 14px;
-  line-height: 1.5;
-}
-
-.message strong {
-  display: block;
-  margin-bottom: 2px;
-}
-
-/* =========================
-   REPLY BOX (BOTTOM)
-   ========================= */
+/* REPLY BOX — FIXED AT BOTTOM */
 .reply-box {
   display: flex;
   gap: 10px;
-  padding: 14px;
+  padding-top: 10px;
   background: #f9fafb;
-  border-top: 1px solid #e5e7eb;
-
-  /* FIX: stay at bottom of chat window */
-  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
 }
 
 .reply-box input {
@@ -212,7 +184,6 @@ h1 {
   border-collapse: collapse;
   background: white;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .agents-dashboard th, td {
@@ -238,9 +209,10 @@ h1 {
 }
 
 /* =========================
-   RESPONSIVE BREAKPOINTS
+   RESPONSIVE
    ========================= */
 
+/* Tablets (<=1024px) */
 @media (max-width: 1024px) {
   .sidebar {
     width: 45%;
@@ -250,19 +222,26 @@ h1 {
   }
 }
 
+/* Mobile (<=768px) */
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
   }
 
-  .sidebar {
+  .sidebar, .chat-window {
     width: 100%;
-    max-width: none;
-    height: 45%;
+    height: 50%;
+  }
+}
+
+/* Small Mobile (<=480px) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
   }
 
-  .chat-window {
-    width: 100%;
-    height: 55%;
+  .tabs button {
+    padding: 8px 12px;
+    font-size: 14px;
   }
 }
