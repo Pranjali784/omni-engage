@@ -84,11 +84,11 @@ Omni-Engage follows a **scalable microservices architecture** with clear separat
 
 ### ✅ **Prerequisites**
 
-* Docker Desktop (recommended)
-* Node 18+
 * Java 17
+* Spring Boot 3.x
+* MySQL 8+ / TiDB Cloud
 * Maven 3.9+
-* TiDB Cloud / MySQL Database
+* Docker Desktop (recommended)
 
 ---
 
@@ -175,7 +175,8 @@ Password: omni123
 * Spring Boot 3.3
 * JPA/Hibernate
 * REST APIs
-* Actuator
+* MySQL / TiDB Cloud
+* Docker
 
 ### **Frontend**
 
@@ -275,20 +276,20 @@ SPRING_DATASOURCE_PASSWORD=
 
 # 📈 **Future Enhancements (2025 Roadmap)**
 
-* [ ] Replace polling with **WebSockets / SSE**
-* [ ] Add **JWT Authentication**
+* [ ] Replace polling with **WebSockets / Server-Sent Events (SSE)**
 * [ ] Deploy using **AWS ECS/EKS or Kubernetes**
 * [ ] Add **Redis Caching**
-* [ ] Multi-Agent Routing / Load Balancing
 * [ ] AI Agent Assistant (LLM Integration)
 * [ ] Real-time analytics dashboards using ClickHouse
+* [ ] SLA Tracking & Ticket Escalation Engine
+* [ ] Conversation auto-summarization using LLMs
 
 ---
 
 # 👩‍💼 **Author**
 
 **Pranjali Srivastava**
-*Java Backend Engineer | Microservices | Cloud-Native Systems*
+*Java Developer | Backend Engineer | Microservices | SQL & Data Handling | Cloud Technologies*
 📍 Chennai, India
 
 <p align="center">
@@ -302,3 +303,4 @@ SPRING_DATASOURCE_PASSWORD=
 > 🚀 *Omni-Engage represents a fully modern, scalable, production-grade microservices system built using today’s best practices.*
 
 ---
+
